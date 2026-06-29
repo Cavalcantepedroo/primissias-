@@ -1,15 +1,17 @@
 import pandas as pd
 from sqlalchemy import create_engine
+from dotenv import load_dotenv
+import os
 
+load_dotenv() # Carrega as variáveis do ficheiro .env
+db_url = os.getenv("DB_URL_COMPLETA")
+
+db_url = os.environ.get("DB_URL_COMPLETA")
+if not db_url:
+    # Se não encontrar a variável, pede para você digitar no terminal (mais seguro)
+    db_url = input("Por favor, digite a sua URL de conexão completa: ")
 
 def migrar_dados():
-
-    # URL do Supabase (Pooler)
-
-    db_url = "postgresql://postgres.bgypyuvazepwrvafsxdc:qqppwwooeeii@aws-1-us-west-2.pooler.supabase.com:5432/postgres?options=-c%20search_path=public"
-
-    engine = create_engine(db_url)
-
 
     print("A carregar Excel...")
     df = pd.read_excel('Pedido Satine - Ordenado.xlsx')

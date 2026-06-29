@@ -2,3 +2,5 @@
 __pycache__/
 sistema_vendas.db
 *.xlsx
+seguranca_check.py
+.env
