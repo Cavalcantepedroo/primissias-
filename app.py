@@ -8,22 +8,31 @@ db_url = st.secrets.get("DB_URL")
 senha_correta = st.secrets["SENHA_ACESSO"]
 
 def check_password():
-    """Retorna True se o usuário digitou a senha correta."""
-    def password_entered():
-        if st.session_state["password"] == senha_correta:
-            st.session_state["password_correct"] = True
-            del st.session_state["password"]
-        else:
-            st.session_state["password_correct"] = False
-
-    if "password_correct" not in st.session_state:
-        st.text_input("Digite a senha para acessar:", type="password", on_change=password_entered, key="password")
-        return False
-    elif not st.session_state["password_correct"]:
-        st.text_input("Senha incorreta. Tente novamente:", type="password", on_change=password_entered, key="password")
-        return False
-    else:
+    # 1. Verifica se já está logado
+    if st.session_state.get("password_correct", False):
         return True
+
+    # 2. Se não está logado, desenha o formulário APENAS UMA VEZ
+    # Usamos o st.empty() para garantir um contêiner isolado
+    placeholder = st.empty()
+    
+    with placeholder.form(key="login_form"):
+        st.write("Digite a senha para acessar:")
+        senha_input = st.text_input("Senha", type="password", key="password_input")
+        submit_button = st.form_submit_button(label="Entrar")
+
+    # 3. Processa o clique
+    if submit_button:
+        if senha_input == st.secrets["SENHA_ACESSO"]:
+            st.session_state["password_correct"] = True
+            placeholder.empty() # Remove o formulário da tela após logar
+            st.rerun()
+        else:
+            st.error("Senha incorreta!")
+            st.session_state["password_correct"] = False
+            
+    return False
+
 
 if not check_password():
     st.stop() # Para a execução do código se a senha não estiver correta
