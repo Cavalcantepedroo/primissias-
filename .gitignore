@@ -1,0 +1,4 @@
+.streamlit/
+__pycache__/
+sistema_vendas.db
+*.xlsx
