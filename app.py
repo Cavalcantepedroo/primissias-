@@ -3,6 +3,8 @@ import streamlit as st
 import pandas as pd
 from motor_vendas import registrar_venda, registrar_entrada, gerar_relatorio_atualizado
 
+db_url = st.secrets.get("DB_URL")
+
 # Configuração da página Streamlit
 st.set_page_config(
     page_title="Sistema PDV - Satine",
