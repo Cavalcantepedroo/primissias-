@@ -4,6 +4,29 @@ import pandas as pd
 from motor_vendas import registrar_venda, registrar_entrada, gerar_relatorio_atualizado
 
 db_url = st.secrets.get("DB_URL")
+# No topo do seu app.py:
+senha_correta = st.secrets["SENHA_ACESSO"]
+
+def check_password():
+    """Retorna True se o usuário digitou a senha correta."""
+    def password_entered():
+        if st.session_state["password"] == senha_correta:
+            st.session_state["password_correct"] = True
+            del st.session_state["password"]
+        else:
+            st.session_state["password_correct"] = False
+
+    if "password_correct" not in st.session_state:
+        st.text_input("Digite a senha para acessar:", type="password", on_change=password_entered, key="password")
+        return False
+    elif not st.session_state["password_correct"]:
+        st.text_input("Senha incorreta. Tente novamente:", type="password", on_change=password_entered, key="password")
+        return False
+    else:
+        return True
+
+if not check_password():
+    st.stop() # Para a execução do código se a senha não estiver correta
 
 # Configuração da página Streamlit
 st.set_page_config(
